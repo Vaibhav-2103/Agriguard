@@ -1,0 +1,249 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=0.8in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{float}
+
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue
+}
+
+\begin{document}
+
+\begin{center}
+
+{\Large\bfseries
+AgriGuard: AI-Powered Crop Disease Detection
+Project Proposal
+
+\vspace{0.4cm}
+
+{\large
+\textbf{Project Proposal for UCS503}
+}
+
+\vspace{0.15cm}
+
+Submitted to:
+
+\vspace{0.05cm}
+
+\textbf{Ms. Paramveer Kaur}
+
+\vspace{0.05cm}
+
+\textbf{Thapar Institute of Engineering and Technology}
+
+\vspace{0.45cm}
+
+
+\begin{tabular}{ccc}
+
+\begin{minipage}{0.3\textwidth}
+\centering
+\textbf{Vaibhav Chaudhary}\\
+Roll No.: \texttt{1024030114}\\
+{\footnotesize\texttt{vchaudhary2\_be24@thapar.edu}}
+\end{minipage}
+
+&
+
+\begin{minipage}{0.3\textwidth}
+\centering
+\textbf{Harshit Kasrija}\\
+Roll No.: \texttt{1024030155}\\
+{\footnotesize\texttt{hkasrija\_be24@thapar.edu}}
+\end{minipage}
+
+&
+
+\begin{minipage}{0.3\textwidth}
+\centering
+\textbf{Harnoor}\\
+Roll No.: \texttt{1024030179}\\
+{\footnotesize\texttt{Hharnoor\_be24@thapar.edu}}
+\end{minipage}
+
+\end{tabular}
+
+\end{center}
+
+\vspace{0.25cm}
+
+\section{Higher-order goal}
+
+The goal of AgriGuard is to help farmers detect crop diseases early and accurately using Artificial Intelligence.
+Instead of depending only on personal experience or waiting for an agriculture expert, farmers can simply upload a photo of the affected leaf. The system will identify the disease, show its severity, and suggest basic treatment.
+The bigger aim is to reduce crop loss and support farmers with a simple, fast, and reliable digital tool.
+
+
+\section{Time-to-value}
+
+\begin{itemize}[leftmargin=0.6cm]
+
+    \item The first version will support crop image upload, location capture, database storage, and a basic administrative dashboard for field reports.
+
+    \item Later iterations will add automated disease detection, severity scoring, treatment verification, and analytics.
+
+    \item Development will be divided into weekly increments so that every stage produces a working and testable part of the system.
+
+    \item Success will be measured through image-processing reliability, workflow correctness, system response time, and deep-learning classification accuracy.
+
+\end{itemize}
+
+
+\section{Problem Statement}
+
+Crop diseases such as leaf blights, rusts, and fungal infections can lead to severe crop failure, economic loss, and excessive chemical application. In practice, disease diagnosis is manual, fragmented, and slow, making it difficult for farmers to know which diseases are present, how severe they are, and what treatment should be applied.
+
+
+\section{Proposed Solution}
+
+AgriGuard is a desktop application that uses Artificial Intelligence to detect crop diseases from leaf images.
+The system will provide:
+
+\begin{itemize}[leftmargin=0.6cm]
+
+    \item \textbf{Photo Upload:} Farmer uploads a clear photo of the affected leaf.
+    \item \textbf{AI Detection:} The system identifies the disease and its severity.
+    \item \textbf{Treatment Advice:} Basic treatment and prevention tips are shown.
+    \item \textbf{Report Saving:} Every detection is saved for future reference.
+    \item \textbf{Expert Panel (optional):} Agriculture officers can view and verify reports.
+    \item \textbf{Simple Dashboard:} Users can see their previous reports.
+
+\end{itemize}
+
+\subsection{Core workflow}
+
+The intended workflow is straightforward:
+\begin{enumerate}
+    \item Farmer opens the AgriGuard application.
+    \item Uploads a photo of the diseased leaf.
+    \item AI model analyses the image.
+    \item \textbf{System shows:}
+    \begin{itemize}
+        \item Disease name
+        \item Severity level (Low / Medium / High)
+        \item Confidence score
+        \item Treatment suggestions
+    \end{itemize}
+    \item Farmer can save the report.
+    \item (Optional) Report can be sent to an agriculture expert for review.
+\end{enumerate}
+
+
+
+\subsection{Practical implementation}
+
+The project will be designed as a simple desktop application that farmers can use easily on a normal computer.
+Users will upload a clear photo of the affected leaf. The system will analyse the image using a pre-trained computer-vision model that has been fine-tuned on a labelled crop disease dataset. 
+The application will show the detected disease, its severity level, and basic treatment suggestions. All reports will be saved so that users can view them later.
+
+
+\section{Solution Approach}
+AgriGuard is mainly a software system in which computer vision is one important part. The focus is on connecting farmers, disease reports, automated analysis, treatment advice, and record-keeping in a reliable way.
+
+\subsection{Crop Disease Assessment}
+\begin{itemize}[leftmargin=*]
+    \item Image-analysis component trained using a labelled crop disease dataset
+    \item Focus on common leaf diseases
+    \item AI provides disease name, severity level (Low / Medium / High), and confidence score
+    \item Expert can verify or improve the result if needed
+\end{itemize}
+
+\subsection{Advice and Decision Rules}
+After the disease is detected, the system will show basic treatment and prevention suggestions based on:
+\begin{itemize}[leftmargin=*]
+    \item Type of disease detected
+    \item Severity level
+    \item Confidence of the AI prediction
+\end{itemize}
+The rules will be kept simple and clear so that farmers can easily understand the advice.
+
+\subsection{System Architecture}
+The system will follow a three-tier architecture:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Frontend}: Simple interfaces for farmers and experts
+    \item \textbf{Backend}: Handles user login, photo upload, AI analysis requests, report creation, and status management
+    \item \textbf{Database and Storage}: Stores user details, reports, disease results, and treatment advice. Images will be stored separately and linked to each report
+\end{itemize}
+
+
+
+\section{Evaluation Criterion}
+The project will be evaluated using measurable system and model outcomes.
+
+\subsection{Primary metrics}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Report processing success rate}: percentage of valid photo submissions that successfully pass through image upload, AI analysis, report creation, and database storage.
+    \begin{itemize}
+        \item Target: at least 95\% successful processing for valid test submissions.
+        \item Measurement: application logs and database records.
+    \end{itemize}
+    \item \textbf{Disease detection performance}: accuracy, precision, and recall of the AI model on a held-out test set of leaf images.
+\end{itemize}
+
+\subsection{Secondary metrics}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Workflow correctness}: percentage of test cases that follow the complete flow from photo upload to final result.
+    \item \textbf{Severity consistency}: percentage of cases where the predicted severity matches the expected level.
+    \item \textbf{Response time}: time required for common operations such as photo analysis and report generation.
+    \item \textbf{Traceability}: ability to retrieve the complete history of a report.
+    \item \textbf{Usability}: feedback on the clarity and simplicity of the farmer and expert interfaces.
+\end{itemize}
+
+\subsection{Validation plan}
+The team will test the system using controlled leaf images, simulated farmer users, and a separate set of images for model evaluation. Expected and actual system behaviour will be compared across predefined test cases, with failures recorded and fixed in later iterations.
+
+\section{Scalability}
+Although the project is designed as a student prototype, its architecture will allow future expansion.
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Scalable in design}: The frontend, backend, database, and AI model responsibilities will be separated. This will help the system handle a larger number of reports in the future.
+    \item \textbf{Extensible in functionality}: Future versions could support more crops and diseases, mobile application, expert verification features, and basic analytics.
+\end{enumerate}
+
+\section{Engine availability heuristic}
+The core system can be developed using open-source and freely available tools. The project will avoid making paid third-party services a requirement.
+
+The main development components include:
+\begin{itemize}[leftmargin=*]
+    \item Desktop application development tools
+    \item A relational database
+    \item Open-source computer-vision libraries and models
+    \item Local storage during development
+    \item Authentication and simple role-based access
+    \item Automated testing and source-control tools
+\end{itemize}
+
+
+
+
+\section{Risks and mitigations}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Model accuracy}: Leaf images can vary in lighting, angle, and quality. The model will be evaluated on held-out data, while final decisions can be reviewed by an expert if needed.
+    \item \textbf{Image quality}: Users may upload unclear or blurry photos. The system will show a message asking for a clearer image when confidence is too low.
+    \item \textbf{Duplicate reports}: Similar reports from the same area and time can be flagged and reviewed by the admin.
+    \item \textbf{Privacy}: Only necessary information for disease reporting and advice will be collected, with simple role-based access.
+    \item \textbf{Scope expansion}: Advanced features will remain optional so that the core photo-to-advice workflow is completed first.
+    \item \textbf{Computing limitations}: Transfer learning and a lightweight model will be used to keep training feasible on normal student computers.
+    \item \textbf{External dependencies}: Paid services will not be required for core functionality; open-source or local tools will be preferred.
+\end{itemize}
+
+\section{Summary}
+AgriGuard is an end-to-end system that helps farmers detect crop diseases from the moment they upload a leaf photo to the point they receive clear advice. It combines photo-based reporting, AI-assisted disease detection, severity prediction, treatment suggestions, and simple record-keeping.
+
+The project is particularly suitable for a student team because its main challenge is not only training a machine-learning model. The team must also design a reliable system with clear user roles, database structure, workflows, testing, and traceability. The AI component adds an intelligent layer to a practical agricultural problem, while the overall system demonstrates a complete software engineering process.
+
+\end{document}
