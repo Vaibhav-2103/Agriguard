@@ -1,0 +1,6 @@
+-r requirements.txt
+torch>=2.0.0
+torchvision>=0.15.0
+onnx>=1.15.0
+pytest>=8.0.0
+pytest-asyncio>=0.23.0

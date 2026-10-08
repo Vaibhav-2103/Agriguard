@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: agriguard
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:///./data/agriguard.db
+      - key: MODEL_PATH
+        value: ml/outputs/agriguard_model.onnx
+      - key: CHATBOT_BACKEND
+        value: rules
+      - key: UPLOAD_DIR
+        value: uploads
+      - key: SEED_DEMO
+        value: "true"
+      - key: ALLOWED_ORIGINS
+        value: "*"
