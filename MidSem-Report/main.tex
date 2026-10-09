@@ -1,0 +1,539 @@
+\documentclass{tietreport}
+
+% Import images
+\usepackage{graphicx}
+
+% Bibliography configuration
+\usepackage[
+  date=year,
+  style=alphabetic,
+  backend=biber,
+  sorting=nty,
+  maxnames=5,
+  minnames=3,
+  maxalphanames=4,
+  minalphanames=3,
+  backref=true,
+  doi=false,
+  isbn=false,
+  url=false,
+  eprint=false
+]{biblatex}
+\addbibresource{references.bib}
+
+%% ==================================================
+%% CUSTOMIZE THESE FIELDS FOR YOUR PROJECT
+%% ==================================================
+
+% Course/Lab header
+\TitlePageHeader{%
+  UCS503 - Software Engineering%
+}
+
+% Main project title
+\ProjectTitle{%
+  AgriGuard%
+}
+
+% Subtitle or project description
+\ProjectSubTitle{%
+  AI-Based Crop Disease Detection and Advice for Farmers%
+}
+
+% Student information (up to 4 students)
+\author{%
+  \texttt{1024030114} Vaibhav Chaudhary \\
+  \texttt{1024030155} Harshit Kasrija \\
+  \texttt{1024030179} Harnoor%
+}
+
+% Group number, degree, year, program
+\TitlePageSubText{%
+  Group: \texttt{XXXX} BE Third Year, CSE%
+}
+
+% Faculty advisor/guide name
+\AdvisorName{%
+  Ms. Paramveer Kaur%
+}
+
+% Evaluation period and department info
+\TitlePageFooterText{{%
+    \large Mid-Semester Evaluation \\[0.2cm]
+    \bfseries Computer Science and Engineering
+    Department%
+  } \\[0.15cm]
+  Thapar Institute of Engineering and Technology,
+  Patiala%
+}
+
+%% ==================================================
+
+\begin{document}
+
+% Generate title page
+\maketitle
+
+% Table of contents (auto-generated from chapters)
+\tableofcontents
+
+% ===== CHAPTER 1: INTRODUCTION =====
+
+\chapter{Introduction}
+
+\section{Background and Context}
+
+Crop diseases such as leaf blights, rusts and fungal
+infections spread quickly and can destroy a large part
+of a crop. They cause money loss for farmers and often
+lead to too much use of chemicals. At present, most
+farmers find out the disease using their own experience,
+or they wait for an agriculture expert to visit. This is
+slow, and a wrong or late decision can make the damage
+worse.
+
+Computer vision and deep learning can help here. Earlier
+research has shown that a model trained on leaf photos
+can recognise many plant diseases~\cite{mohanty2016}. Our
+project, \textbf{AgriGuard}, uses this idea to build a
+simple web application. A farmer uploads a photo of an
+affected leaf and gets the disease name, how serious it
+is, and what to do next. The project also shows how a
+machine learning model can be connected with a website,
+a database, user login and testing to form one working
+system.
+
+\subsection{Problem Statement}
+
+Diagnosis of crop diseases is manual, slow and scattered.
+Farmers find it hard to know which disease is present, how
+severe it is and which treatment to use. There is a need
+for a fast, low-cost and easy tool that can identify the
+disease from a photo and explain the next steps in simple
+language, without depending on paid services.
+
+\section{Project Objectives}
+
+\begin{enumerate}
+  \item \textbf{Disease detection:} Identify the crop
+    disease from a leaf photo using a deep learning model
+    trained on the PlantVillage dataset, and measure its
+    accuracy, precision and recall on a separate test set.
+  \item \textbf{Severity and confidence:} Show a confidence
+    score and estimate the severity (Low, Medium or High)
+    for every result.
+  \item \textbf{Advice:} Give simple disease information and
+    treatment advice for each detected disease.
+  \item \textbf{Records and languages:} Save every report so
+    that the farmer can see old results, and support English,
+    Hindi and Punjabi in the interface.
+  \item \textbf{Free tools:} Build the complete system using
+    only free and open-source tools, with a clear separation
+    between the website, backend and model.
+\end{enumerate}
+
+These objectives are specific and can be checked: the model
+results are measured on unseen test images, and the system is
+checked with test cases in Chapter~3.
+
+% ===== CHAPTER 2: METHODOLOGY & DESIGN =====
+
+\chapter{Methodology and Design}
+
+\section{System Architecture}
+
+AgriGuard follows a three-tier design: a website for the user,
+a backend that does the work, and a database for storage.
+
+\subsection{High-Level Design}
+
+The main parts of the system are:
+
+\begin{itemize}
+  \item \textbf{Website (frontend):} Pages for login, scanning
+    a crop, viewing results, report history and the AgriBot chat.
+  \item \textbf{Backend:} Handles login, checks the uploaded
+    image, runs the model, measures severity, prepares the advice
+    and saves the report.
+  \item \textbf{Database and storage:} Stores users, reports and
+    chat messages. Uploaded images are kept as files and linked
+    to their reports.
+\end{itemize}
+
+For one photo, the system works in these steps:
+
+\begin{enumerate}
+  \item The farmer logs in and uploads or captures a leaf photo
+    (JPG, PNG or WEBP, up to 8~MB).
+  \item The backend checks that the file is a proper image.
+  \item The MobileNetV2 model predicts the disease and gives a
+    confidence score.
+  \item An OpenCV step measures how much of the leaf is damaged
+    and gives a severity level.
+  \item The result and advice are shown to the farmer and the
+    report is saved in the history.
+\end{enumerate}
+
+\subsection{Technical Stack}
+
+\begin{itemize}
+  \item \textbf{Framework/Language:} Python for the backend
+    (FastAPI) and model training, JavaScript with React for the
+    website.
+  \item \textbf{Database:} SQLite.
+  \item \textbf{Tools:} Kaggle notebook with a free GPU for
+    training, Git and GitHub for source control, and an AI coding
+    assistant (Antigravity) to help build the web application from
+    our written specification. The team ran and checked the code.
+  \item \textbf{Libraries:} PyTorch~\cite{paszke2019} and
+    torchvision for the model, OpenCV and Pillow for images,
+    scikit-learn and matplotlib for results, and Tailwind CSS for
+    the interface design.
+\end{itemize}
+
+All tools are free and open source, and no paid service or
+external AI service is needed.
+
+\section{Implementation Details}
+
+\subsection{Module 1: Disease Detection Model}
+
+\paragraph{Dataset.} We used the PlantVillage dataset with color
+images~\cite{hughes2015}. Each folder is one class, named after
+the crop and the disease, for example
+\texttt{Tomato\_\_\_Early\_blight}. The copy we used was already
+divided into \texttt{train} and \texttt{val} folders. We kept 15\%
+of the \texttt{train} folder (chosen with a fixed random seed) as a
+validation set to pick the best training round. The \texttt{val}
+folder of the dataset was not used during training and was used
+only once at the end as the test set. The application supports 14
+crops.
+
+\paragraph{Model.} We used transfer learning. We started with
+MobileNetV2~\cite{sandler2018}, which was already trained on
+ImageNet, and replaced its last layer so that it gives one output
+for each disease class. This model is small and fast, so it could be
+trained on a free GPU and can run on an ordinary computer. Training
+was done in two phases, as shown in Table~\ref{tab:training}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{4.2cm}|p{9cm}|}
+  \hline
+  \textbf{Setting} & \textbf{Value} \\
+  \hline
+  Base model & MobileNetV2 (ImageNet weights) \\
+  \hline
+  Image size, batch size & $224 \times 224$ pixels, 64 \\
+  \hline
+  Optimizer & AdamW \\
+  \hline
+  Phase A & 2 epochs, only the new last layer trained
+    (learning rate $10^{-3}$) \\
+  \hline
+  Phase B & 6 epochs, last 6 blocks also trained
+    (learning rate $10^{-4}$) \\
+  \hline
+  Augmentation & Random crop, horizontal and vertical flip,
+    rotation up to 20 degrees, color change \\
+  \hline
+  Best model & Saved at the epoch with the best validation
+    accuracy \\
+  \hline
+\end{tabular}
+\caption{Training settings of the disease model}
+\label{tab:training}
+\end{table}
+
+The best model and the list of class names are saved to files, and
+the application loads exactly these files to make predictions.
+
+\subsection{Module 2: Severity Estimation and Treatment Advice}
+
+\paragraph{Severity.} The model gives only the disease name, so
+severity is measured separately with OpenCV. The leaf is separated
+from the background using color (HSV), the healthy green pixels are
+counted, and the remaining leaf pixels are counted as damaged. The
+damaged fraction is converted to a level: below 10\% is Low, 10\% to
+30\% is Medium, and above 30\% is High. This is a simple
+color-based estimate and not a trained model. The application also
+shows an overlay on the photo, so the farmer can see which part was
+counted.
+
+\paragraph{Advice.} The advice comes from a prepared knowledge base
+with one entry for each disease class. It suggests simple and
+organic steps first, names chemicals only by their active
+ingredient, gives no exact dose, and tells the farmer to read the
+product label and ask a local agriculture officer. If the model
+confidence is low, the application asks for a clearer photo instead
+of giving advice.
+
+\subsection{Module 3: Web Application and User Interface}
+
+The website is made for non-technical users, with large buttons and
+a green theme. The login page (Figure~\ref{fig:login}) has one-click
+demo accounts for the two roles, Farmer and Expert, along with normal
+sign in and account creation. The language can be changed to
+English, Hindi or Punjabi from the top bar
+(Figure~\ref{fig:lang}).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.75\textwidth]{images/fig1_login.png}
+\caption{Login page with Farmer and Expert demo accounts}
+\label{fig:login}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.4\textwidth]{images/fig2_language.png}
+\caption{Language selector (English, Hindi, Punjabi)}
+\label{fig:lang}
+\end{figure}
+
+On the Scan Crop page (Figure~\ref{fig:scan}), the farmer can drag
+and drop a leaf photo, browse for one, or open the camera. A link
+explains which crops are supported and what the model cannot do.
+After a photo is chosen, a preview is shown
+(Figure~\ref{fig:preview}) and the farmer can change or remove it.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{images/fig3_scan_page.png}
+\caption{Scan Crop page for uploading or capturing a leaf photo}
+\label{fig:scan}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.75\textwidth]{images/fig4_preview.png}
+\caption{Photo preview before analysis}
+\label{fig:preview}
+\end{figure}
+
+Below the upload box, the page shows tips for taking a good photo
+and optional boxes for crop, field location and notes
+(Figure~\ref{fig:options}). The analysis starts when the farmer
+presses \textit{Analyze Leaf Now}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{images/fig5_options.png}
+\caption{Photo tips, optional details and the Analyze Leaf Now button}
+\label{fig:options}
+\end{figure}
+
+The result page (Figure~\ref{fig:result}) shows the crop, the type
+of disease, the disease name with its scientific name, a short
+description, the severity with the percentage of damaged area, and the
+confidence of the model. An overlay marks the damaged parts of the
+leaf, and the farmer can switch back to the original photo. A button
+opens AgriBot for the same diagnosis.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{images/fig6_result.png}
+\caption{Result page for a tomato leaf: Early blight, High severity
+(34.1\% damaged area), 98\% confidence}
+\label{fig:result}
+\end{figure}
+
+\subsection{Module 4: AgriBot Chatbot (Current Status)}
+
+AgriBot is meant to answer the farmer's questions about the detected
+disease and the action needed. The chat page, the button on the
+result page and the saving of chat history are in place. However, the
+chatbot is still a prototype: we have not trained or tested it
+properly yet, so its answers can be short or incomplete, and we have
+not measured how good it is. For this reason AgriBot is not included
+in the evaluation in Chapter~3. Improving it is the first item of
+future work.
+
+% ===== CHAPTER 3: RESULTS & EVALUATION =====
+
+\chapter{Results and Evaluation}
+
+\section{Testing Methodology}
+
+We checked the system in the following ways:
+
+\begin{itemize}
+  \item \textbf{Model testing:} The trained model was tested on
+    images from the held-out test set that it never saw during
+    training. We measured accuracy, precision, recall and F1 score
+    for each class.
+  \item \textbf{Functional testing:} We tried the main steps of the
+    application by hand: login, uploading photos, viewing the
+    result, report history and language change.
+  \item \textbf{Input checking:} We tried a blurry photo, a photo
+    that is not a leaf, a wrong file type and a file larger than
+    8~MB, to see that the application gives a proper message.
+  \item \textbf{Performance testing:} We noted the time the
+    application takes to show a result after a photo is uploaded.
+\end{itemize}
+
+\section{Performance Metrics}
+
+Table~\ref{tab:model} shows the results of the model on the test
+set. The values are taken from the report saved after training.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{6.5cm}|p{6.5cm}|}
+  \hline
+  \textbf{Item} & \textbf{Result} \\
+  \hline
+  Number of classes & \textbf{[FILL]} \\
+  \hline
+  Train / validation / test images & \textbf{[FILL]} \\
+  \hline
+  Test accuracy & \textbf{[FILL]} \\
+  \hline
+  Precision (macro average) & \textbf{[FILL]} \\
+  \hline
+  Recall (macro average) & \textbf{[FILL]} \\
+  \hline
+  F1 score (macro average) & \textbf{[FILL]} \\
+  \hline
+\end{tabular}
+\caption{Model results on the held-out test set}
+\label{tab:model}
+\end{table}
+
+Table~\ref{tab:example} shows an example result from the running
+application (see also Figure~\ref{fig:result}).
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{4.5cm}|p{8.5cm}|}
+  \hline
+  \textbf{Item} & \textbf{Output} \\
+  \hline
+  Predicted disease & Tomato, Early blight
+    (\textit{Alternaria solani}), a fungal disease \\
+  \hline
+  Confidence & 98\% \\
+  \hline
+  Severity & High (34.1\% of the leaf area damaged) \\
+  \hline
+\end{tabular}
+\caption{Example output of the application}
+\label{tab:example}
+\end{table}
+
+Table~\ref{tab:tests} lists the functional tests we carried out.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{4.2cm}|p{6.3cm}|p{2.2cm}|}
+  \hline
+  \textbf{Test} & \textbf{What should happen} &
+  \textbf{Result} \\
+  \hline
+  Good leaf photo & Disease, confidence and severity are shown and
+    the report is saved & \textbf{[FILL]} \\
+  \hline
+  Blurry or non-leaf photo & The application asks for a clearer
+    photo & \textbf{[FILL]} \\
+  \hline
+  Wrong file type or file over 8~MB & The photo is rejected with a
+    message & \textbf{[FILL]} \\
+  \hline
+  Login as Farmer and Expert & Correct pages for each role &
+    \textbf{[FILL]} \\
+  \hline
+  Old reports & Past reports are listed after login &
+    \textbf{[FILL]} \\
+  \hline
+  Language change & The interface changes to Hindi and Punjabi &
+    \textbf{[FILL]} \\
+  \hline
+  Response time & Result shown within a few seconds &
+    \textbf{[FILL]} \\
+  \hline
+\end{tabular}
+\caption{Functional tests of the application}
+\label{tab:tests}
+\end{table}
+
+\section{Analysis}
+
+\begin{itemize}
+  \item \textbf{Did we meet our objectives?} The main workflow
+    works from start to end: a farmer uploads a leaf photo and gets
+    the disease, confidence, severity and advice, and the report is
+    saved. The interface supports three languages. The chatbot part
+    of the advice objective is not finished yet.
+  \item \textbf{Where did we do well?} A small pre-trained model
+    gave good results with a short training time on a free GPU, and
+    the whole system runs on free tools.
+  \item \textbf{What were the challenges?} The PlantVillage photos
+    are taken on plain backgrounds and many images show the same
+    leaf, so the test accuracy is likely higher than what we would
+    get on real farm photos. The severity is based on color, so
+    light and background can change it. The model only knows the
+    crops it was trained on, so a leaf from another crop can get a
+    wrong answer.
+  \item \textbf{How did we handle them?} The application shows
+    the supported crops, asks for a clearer photo when the
+    confidence is low, and shows a warning that an agriculture
+    expert should check the treatment advice before it is used on
+    a real farm.
+\end{itemize}
+
+% ===== CHAPTER 4: CONCLUSION =====
+
+\chapter{Conclusion}
+
+\section{Summary of Work}
+
+We built AgriGuard, a web application that finds crop diseases
+from leaf photos. We trained a MobileNetV2 model on the PlantVillage
+dataset, added an OpenCV step to estimate severity, prepared a
+knowledge base for advice, and built a multilingual website with
+login, report history and a chat page for AgriBot. Most of our
+objectives were met. The AgriBot chatbot is still a prototype.
+
+\section{Key Findings}
+
+\begin{itemize}
+  \item \textbf{Finding 1:} Transfer learning with a small model
+    gives good disease recognition on PlantVillage with a short
+    training time (see Table~\ref{tab:model}).
+  \item \textbf{Finding 2:} A disease model alone is not enough for
+    farmers. Severity, confidence, clear advice and saved reports
+    make the result useful.
+  \item \textbf{Finding 3:} Results on a clean dataset do not
+    guarantee the same results on real farm photos, so testing on
+    real photos is important.
+\end{itemize}
+
+\section{Future Work and Recommendations}
+
+\begin{enumerate}
+  \item Finish and test AgriBot properly, using a checked
+    knowledge base.
+  \item Train with real farm photos, add more crops, and reject
+    photos that are not leaves.
+  \item Use a trained model for severity instead of the color
+    method.
+  \item Complete the expert review feature, where agriculture
+    officers can verify reports.
+  \item Make a mobile application and put the system online with a
+    permanent database.
+\end{enumerate}
+
+\section{Final Remarks}
+
+This project taught us how to take a machine learning model from
+training to a working application, and how much the surrounding
+parts (image checks, user roles, storage and testing) matter. With
+checked advice and real farm data, a tool like AgriGuard could
+become useful for farmers.
+
+% ===== BIBLIOGRAPHY =====
+
+% Print bibliography with heading in TOC
+\printbibliography[heading=bibintoc]
+
+\end{document}
